@@ -52,3 +52,6 @@ Played a full 10 rounds on the demo set: reveal, results and personal-best handl
 
 ## 17. README screenshots and limitation write-up
 Captured four screenshots from the demo run (round, reveal, results, phone layout) and documented the image-host limitation and the fallback plainly in the README.
+
+## 18. Richer home page
+The original home page was functional but gave a first-time visitor (a recruiter spending a few seconds) nothing to look at. Added a hero section with two bundled paintings as decoration (empty `alt` text, since they add no information beyond the headline) and a three-step "How it works" section. The hero images come from `public/demo/`, so they render even where the museum's image server is blocked.
