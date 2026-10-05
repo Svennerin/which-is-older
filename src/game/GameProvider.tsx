@@ -15,7 +15,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     loadingRef.current = true
     dispatch({ type: 'loadStarted' })
     loadGame()
-      .then((rounds) => dispatch({ type: 'loadSucceeded', rounds }))
+      .then(({ rounds, isDemo }) => dispatch({ type: 'loadSucceeded', rounds, isDemo }))
       .catch((error: unknown) => {
         const message = error instanceof Error ? error.message : 'Something went wrong loading the artworks.'
         dispatch({ type: 'loadFailed', message })

@@ -2,9 +2,19 @@
 
 A small art-guessing game. Two artworks from the Art Institute of Chicago appear side by side, showing images only. Click the one you think is older. The app then reveals both artworks' titles, artists and dates and tells you whether you were right. A game is 10 rounds, then a score screen.
 
-<!-- TODO: live link once deployed: **Play it:** https://... -->
+**Play it:** https://which-is-older.vercel.app
 
-<!-- TODO: screenshots (home, mid-round, reveal, results) in docs/screenshots/ -->
+## Screenshots
+
+| A round | The reveal |
+|---|---|
+| ![Two artworks side by side, images only](docs/screenshots/01-round.jpg) | ![After guessing: dates, titles and artists revealed](docs/screenshots/02-reveal.jpg) |
+
+| Results | On a phone |
+|---|---|
+| ![Score and round-by-round review](docs/screenshots/03-results.jpg) | ![Artworks stacked vertically on a phone](docs/screenshots/04-mobile.jpg) |
+
+These were captured in demo mode (see [Known limitations](#known-limitations)).
 
 ## Why I built it
 
@@ -74,7 +84,7 @@ npm run build    # type-check and production build
 
 ## Known limitations
 
-- **Image hosting.** Images are loaded straight from the museum's image server (`www.artic.edu`), which sits behind Cloudflare's bot protection. Some networks may be blocked or challenged, in which case images will not load. The game still works, and each failed image offers a link to open it directly. Proxying images through a server would avoid this, but this project is deliberately frontend-only.
+- **Image hosting, and the demo fallback.** The museum's data API is open, but its image files are served from its main website domain (`www.artic.edu`), which sits behind Cloudflare bot protection. In testing, image requests embedded in another site's page were rejected (a plain 403, or a verification challenge that an `<img>` tag can't complete) on both a home connection and mobile data. To keep the app playable, the game checks at the start whether the images load. If they don't, it plays a fixed 10-round **demo set** using public-domain images saved in `public/demo/`, and says so in a banner. Where the museum's images do load, every game is randomly generated. Proxying images through a server would avoid the problem, but this project is deliberately frontend-only.
 - Some pairs are guessable from fame alone.
 - The dataset ends at 1939 for the reasons above.
 

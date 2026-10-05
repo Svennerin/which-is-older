@@ -1,16 +1,24 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Navigate } from 'react-router-dom'
-import { imageUrl } from '../api/artic.ts'
+import { artworkImageSrc } from '../api/artic.ts'
 import ArtworkCard from '../components/ArtworkCard.tsx'
 import { Button, ButtonLink } from '../components/Button.tsx'
+import DemoNotice from '../components/DemoNotice.tsx'
 import Layout from '../components/Layout.tsx'
 import StatusMessage from '../components/StatusMessage.tsx'
-import { ROUNDS_PER_GAME } from '../game/config.ts'
 import { useGame } from '../game/useGame.ts'
 
 export default function GamePage() {
   const { state, startGame, guess, nextRound } = useGame()
-  const { status, rounds, roundIndex, guessedId, score } = state
+  const { status, rounds, roundIndex, guessedId, score, isDemo } = state
+
+  // After "Next round" the focused button disappears and focus would fall back to the top of the
+  // page, making keyboard players Tab past the header to reach the artworks. Moving focus to the
+  // round heading means the next Tab lands on the first artwork.
+  const roundHeadingRef = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    if (roundIndex > 0) roundHeadingRef.current?.focus()
+  }, [roundIndex])
 
   // Visiting /play with no game (first visit, or a page refresh) starts one.
   useEffect(() => {
@@ -22,7 +30,7 @@ export default function GamePage() {
     rounds[roundIndex + 1]?.pair.forEach((artwork) => {
       const preload = new Image()
       preload.referrerPolicy = 'no-referrer'
-      preload.src = imageUrl(artwork.imageId)
+      preload.src = artworkImageSrc(artwork)
     })
   }, [rounds, roundIndex])
 
@@ -70,9 +78,10 @@ export default function GamePage() {
 
   return (
     <Layout>
+      {isDemo && <DemoNotice />}
       <div className="mb-6 flex items-baseline justify-between">
-        <h1 className="text-xl font-bold">
-          Round {roundIndex + 1} <span className="font-normal text-stone-600">of {ROUNDS_PER_GAME}</span>
+        <h1 ref={roundHeadingRef} tabIndex={-1} className="text-xl font-bold outline-none">
+          Round {roundIndex + 1} <span className="font-normal text-stone-600">of {rounds.length}</span>
         </h1>
         <p className="text-stone-700">
           Score: <strong>{score}</strong>

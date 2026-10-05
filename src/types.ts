@@ -30,6 +30,8 @@ export interface Artwork {
   yearStart: number
   yearEnd: number
   imageId: string
+  /** Set only for bundled demo artworks: a local path used instead of the museum's image server. */
+  localImage?: string
 }
 
 /** Two artworks shown side by side. Order is already shuffled for display. */
@@ -60,4 +62,6 @@ export interface GameState {
   /** Every guess made so far, in round order, for the results review. */
   guesses: number[]
   error: string | null
+  /** True when playing the bundled demo set because the museum's images can't be reached. */
+  isDemo: boolean
 }

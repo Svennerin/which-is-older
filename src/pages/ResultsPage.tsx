@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { Button, ButtonLink } from '../components/Button.tsx'
+import DemoNotice from '../components/DemoNotice.tsx'
 import Layout from '../components/Layout.tsx'
 import { ROUNDS_PER_GAME } from '../game/config.ts'
 import { useGame } from '../game/useGame.ts'
@@ -18,15 +19,16 @@ function verdict(score: number, total: number): string {
 export default function ResultsPage() {
   const { state, startGame } = useGame()
   const navigate = useNavigate()
-  const { status, score, rounds, guesses } = state
+  const { status, score, rounds, guesses, isDemo } = state
   // Read the stored best once, before this game's score is saved, so we can tell if it's a new record.
   const [previousBest] = useState(readHighScore)
-  const isNewBest = score > (previousBest ?? 0)
+  const isNewBest = !isDemo && score > (previousBest ?? 0)
 
   // Saving is a side effect on an external system (localStorage), which is what effects are for.
   useEffect(() => {
-    if (status === 'finished') saveHighScore(score)
-  }, [status, score])
+    // The demo is the same 10 pairs every time, so its scores would not be a fair personal best.
+    if (status === 'finished' && !isDemo) saveHighScore(score)
+  }, [status, score, isDemo])
 
   // Reaching /results without finishing a game (e.g. after a refresh) has nothing to show.
   if (status !== 'finished') return <Navigate to="/" replace />
@@ -38,11 +40,12 @@ export default function ResultsPage() {
 
   return (
     <Layout>
+      {isDemo && <DemoNotice />}
       <section className="mx-auto max-w-2xl text-center">
         <h1 className="text-4xl font-bold">
-          {score} / {ROUNDS_PER_GAME}
+          {score} / {rounds.length}
         </h1>
-        <p className="mt-2 text-lg text-stone-700">{verdict(score, ROUNDS_PER_GAME)}</p>
+        <p className="mt-2 text-lg text-stone-700">{verdict(score, rounds.length)}</p>
         {isNewBest ? (
           <p className="mt-2 font-semibold text-emerald-800">New personal best!</p>
         ) : (

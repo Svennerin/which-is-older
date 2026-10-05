@@ -1,15 +1,14 @@
 import { useState } from 'react'
-import { imageUrl } from '../api/artic.ts'
 
 interface Props {
-  imageId: string
+  src: string
   alt: string
   /** Offer an escape-hatch link when loading fails. Off inside buttons, where a nested link is invalid HTML. */
   allowLink?: boolean
 }
 
 /** Shows a pulsing placeholder while the image loads, and a message if it can't. */
-export default function ArtworkImage({ imageId, alt, allowLink = false }: Props) {
+export default function ArtworkImage({ src, alt, allowLink = false }: Props) {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'failed'>('loading')
 
   return (
@@ -21,7 +20,7 @@ export default function ArtworkImage({ imageId, alt, allowLink = false }: Props)
           {/* The link opens only the image, so it doesn't reveal any title or date. */}
           {allowLink && (
             <a
-              href={imageUrl(imageId)}
+              href={src}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 inline-block rounded font-medium text-amber-900 underline focus-visible:outline-4 focus-visible:outline-amber-600"
@@ -32,7 +31,7 @@ export default function ArtworkImage({ imageId, alt, allowLink = false }: Props)
         </div>
       ) : (
         <img
-          src={imageUrl(imageId)}
+          src={src}
           alt={alt}
           // Sending no Referer: the image host may reject requests that come from other sites' pages.
           referrerPolicy="no-referrer"

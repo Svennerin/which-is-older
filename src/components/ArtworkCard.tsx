@@ -1,3 +1,4 @@
+import { artworkImageSrc } from '../api/artic.ts'
 import type { Artwork } from '../types.ts'
 import ArtworkImage from './ArtworkImage.tsx'
 
@@ -28,7 +29,7 @@ export default function ArtworkCard({ artwork, position, revealed, isOlder, isCh
         aria-label={`Choose the ${name} artwork as the older one`}
         className="group rounded-xl border-2 border-transparent bg-white p-3 text-left shadow-sm transition hover:border-amber-500 hover:shadow-md focus-visible:border-amber-600 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
       >
-        <ArtworkImage imageId={artwork.imageId} alt={`The ${name} artwork. Details are hidden until you guess.`} />
+        <ArtworkImage src={artworkImageSrc(artwork)} alt={`The ${name} artwork. Details are hidden until you guess.`} />
         <span className="mt-3 block rounded-lg bg-stone-900 py-2 text-center font-medium text-white group-hover:bg-amber-700 group-focus-visible:bg-amber-700">
           This one is older
         </span>
@@ -42,7 +43,7 @@ export default function ArtworkCard({ artwork, position, revealed, isOlder, isCh
 
   return (
     <figure className={`rounded-xl border-2 bg-white p-3 shadow-sm ${border}`}>
-      <ArtworkImage imageId={artwork.imageId} alt={artwork.title} allowLink />
+      <ArtworkImage src={artworkImageSrc(artwork)} alt={artwork.title} allowLink />
       <figcaption className="mt-3 space-y-1">
         <p className="flex flex-wrap items-center gap-2">
           <span className={`rounded-full px-3 py-1 text-sm font-semibold ${isOlder ? 'bg-emerald-100 text-emerald-900' : 'bg-stone-200 text-stone-800'}`}>

@@ -14,6 +14,11 @@ export function imageUrl(imageId: string, width = 843): string {
   return `${IIIF_URL}/${imageId}/full/${width},/0/default.jpg`
 }
 
+/** Where to load an artwork's image from: the bundled copy for demo artworks, else the museum. */
+export function artworkImageSrc(artwork: Pick<Artwork, 'imageId' | 'localImage'>): string {
+  return artwork.localImage ?? imageUrl(artwork.imageId)
+}
+
 /** A random year window inside the band, so repeat games see different artworks. */
 export function pickWindow(band: Band, rng: () => number): { from: number; to: number } {
   const slack = Math.max(0, band.to - band.from - band.windowSpan)

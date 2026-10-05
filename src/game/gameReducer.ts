@@ -6,7 +6,7 @@ import type { GameState, Round } from '../types.ts'
 
 export type GameAction =
   | { type: 'loadStarted' }
-  | { type: 'loadSucceeded'; rounds: Round[] }
+  | { type: 'loadSucceeded'; rounds: Round[]; isDemo: boolean }
   | { type: 'loadFailed'; message: string }
   | { type: 'guessed'; artworkId: number }
   | { type: 'nextRound' }
@@ -19,6 +19,7 @@ export const initialState: GameState = {
   guessedId: null,
   guesses: [],
   error: null,
+  isDemo: false,
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -27,7 +28,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...initialState, status: 'loading' }
 
     case 'loadSucceeded':
-      return { ...initialState, status: 'playing', rounds: action.rounds }
+      return { ...initialState, status: 'playing', rounds: action.rounds, isDemo: action.isDemo }
 
     case 'loadFailed':
       return { ...initialState, status: 'error', error: action.message }

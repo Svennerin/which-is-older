@@ -16,12 +16,18 @@ function run(actions: GameAction[], from: GameState = initialState) {
   return actions.reduce(gameReducer, from)
 }
 
-const playing = run([{ type: 'loadStarted' }, { type: 'loadSucceeded', rounds }])
+const playing = run([{ type: 'loadStarted' }, { type: 'loadSucceeded', rounds, isDemo: false }])
 
 describe('gameReducer', () => {
   it('moves through loading to playing', () => {
     expect(run([{ type: 'loadStarted' }]).status).toBe('loading')
     expect(playing).toMatchObject({ status: 'playing', roundIndex: 0, score: 0 })
+  })
+
+  it('remembers whether the game is the bundled demo', () => {
+    const demo = run([{ type: 'loadStarted' }, { type: 'loadSucceeded', rounds, isDemo: true }])
+    expect(demo.isDemo).toBe(true)
+    expect(gameReducer(demo, { type: 'loadStarted' }).isDemo).toBe(false)
   })
 
   it('records a failure message', () => {

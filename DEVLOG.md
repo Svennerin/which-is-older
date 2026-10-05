@@ -40,3 +40,15 @@ DevTools showed a plain 403 with no Cloudflare challenge header and no verificat
 
 ## 13. Write the README
 Documented the problem, stack, how pairing works, and the three API limits found by testing. Screenshots and the live link are marked TODO until images load and the site is deployed.
+
+## 14. Moved to its own repo and deployed
+Copied the project to a standalone repo for the portfolio, then deployed to Vercel. Direct loads of `/play` return 200 (the SPA rewrite works) and the data API works from the live site. Images still fail from the tested networks (a home connection and mobile data) because the museum's image server, on its main website domain behind Cloudflare, rejects image requests embedded in other sites. The data API is on a different host and is unaffected.
+
+## 15. Bundled demo game as a fallback
+Since many visitors will likely hit the same image block, the app now probes the image server at game start (a tiny real `<img>` request, in parallel with the API calls, with a timeout). If it fails, the game plays a fixed 10-round set with images saved in `public/demo/` and shows a banner explaining why. I hand-picked recognisable public-domain works and generated the data from the API, then checked every pair against the normal pairing rules. Demo scores are not saved as a personal best because the pairs never change.
+
+## 16. Verify the demo end to end in a browser
+Played a full 10 rounds on the demo set: reveal, results and personal-best handling all worked. Keyboard-only play exposed one real problem: after "Next round" focus fell back to the top of the page, so the first Tab landed on the header link and Enter sent me home. Fixed by moving focus to the round heading when a round starts, so the next Tab reaches the first artwork. Also shortened the demo banner after seeing it push the second artwork below the fold on a phone-sized screen.
+
+## 17. README screenshots and limitation write-up
+Captured four screenshots from the demo run (round, reveal, results, phone layout) and documented the image-host limitation and the fallback plainly in the README.
